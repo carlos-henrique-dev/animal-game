@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+  game_backend:
+    container_name: game_backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/app
+    expose:
+      - '3000'
+    ports:
+      - '3000:3000'
+    environment:
+      APP_ENV: dev
+      PORT: 3000
+      DATABASE_URL: "postgresql://postgres:postgres@game_database:5432/game_db"
+      JWT_TOKEN_SECRET: "senha_super_secreta_para_token_abcd!@a17"
+      JWT_REFRESH_TOKEN_SECRET: "senha_super_refresh_token_43f@edfw"
+      JWT_TOKEN_EXPIRES_IN: "1d"
+      JWT_REFRESH_TOKEN_EXPIRES_IN: "1d"
+    links:
+      - game_database:database
+    command: yarn start:dev
+    networks:
+      main:
+        aliases:
+          - game_backend
+
+  game_database:
+    container_name: game_database
+    image: postgres:11.1
+    volumes:
+      - ./.data/postgresql:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: game_db
+    networks:
+      main:
+        aliases:
+          - game_database
+
+networks:
+  main:
