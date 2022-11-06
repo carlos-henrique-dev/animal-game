@@ -48,6 +48,7 @@ model bet {
 
 model game {
     id        Int         @id @default(autoincrement())
+    name      String      @unique
     betLimit  Int
     createdAt DateTime    @default(now())
     updatedAt DateTime    @updatedAt

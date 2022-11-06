@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../services/prisma.service';
-import { user as User, Prisma, role } from '@prisma/client';
+import { PrismaService } from 'src/services/prisma.service';
+import { user as User, Prisma, role as Role } from '@prisma/client';
+
+import { FindUsersDTO } from './dto/find-users';
+import { CreateUserDTO } from './dto/create-user';
+
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -8,35 +13,31 @@ export class UserService {
 
   async user(
     userWhereUniqueInput: Prisma.userWhereUniqueInput,
-  ): Promise<User | null> {
+  ): Promise<Partial<User> | null> {
     return this.prisma.user.findUnique({
       where: userWhereUniqueInput,
+      select: { id: true, name: true, username: true, password: false },
     });
   }
 
-  async users(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.userWhereUniqueInput;
-    where?: Prisma.userWhereInput;
-    orderBy?: Prisma.userOrderByWithRelationInput;
-  }): Promise<User[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async users(params: FindUsersDTO): Promise<Partial<User>[]> {
     return this.prisma.user.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      ...params,
+      select: { id: true, name: true, username: true, password: false },
     });
   }
 
-  async createUser(data: Prisma.userCreateInput): Promise<User> {
+  async createUser(data: CreateUserDTO): Promise<Partial<User>> {
+    const saltOrRounds = 10;
+    const hash = await bcrypt.hash(data.password, saltOrRounds);
+
     return this.prisma.user.create({
       data: {
         ...data,
-        role: role.USER,
+        password: hash,
+        role: Role.USER,
       },
+      select: { id: true, name: true, username: true, password: false },
     });
   }
 

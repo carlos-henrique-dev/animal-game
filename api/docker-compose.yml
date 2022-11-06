@@ -31,8 +31,6 @@ services:
   game_database:
     container_name: game_database
     image: postgres:11.1
-    volumes:
-      - ./.data/postgresql:/var/lib/postgresql/data
     ports:
       - '5432:5432'
     environment:

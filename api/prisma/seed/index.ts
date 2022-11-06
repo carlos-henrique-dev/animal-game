@@ -1,9 +1,11 @@
 import { PrismaClient } from '@prisma/client';
+import { AdminSeed } from './admin';
 import { AnimalSeed } from './animals';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  await AdminSeed({ prismaClient: prisma });
   await AnimalSeed({ prismaClient: prisma });
 }
 
