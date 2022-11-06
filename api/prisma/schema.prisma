@@ -40,29 +40,20 @@ model bet {
     userId       Int
     animal       animal        @relation(fields: [animalId], references: [id])
     animalId     Int
+    game         game          @relation(fields: [gameId], references: [id])
+    gameId       Int
     createdAt    DateTime      @default(now())
     updatedAt    DateTime      @updatedAt
     game_results game_results?
-    game_bets    game_bets[]
 }
 
 model game {
-    id        Int         @id @default(autoincrement())
-    name      String      @unique
-    betLimit  Int
-    createdAt DateTime    @default(now())
-    updatedAt DateTime    @updatedAt
-    game_bets game_bets[]
-}
-
-model game_bets {
     id        Int      @id @default(autoincrement())
-    game      game     @relation(fields: [gameId], references: [id])
-    gameId    Int
-    bet       bet      @relation(fields: [betId], references: [id])
-    betId     Int      @unique
+    name      String   @unique
+    betLimit  Int
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    bet       bet[]
 }
 
 enum status {

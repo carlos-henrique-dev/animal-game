@@ -1,4 +1,4 @@
-# Carrinho tunado
+# Jogo do bicho
 
 Este é um projeto de estudo de arquitetura e organização de projetos frontend em React.
 
@@ -19,7 +19,15 @@ Acesse a pasta `frontend` e rode o comando:
 
 - Backend
   Dentro da pasta `api` rode o comando:
-  > `-- TODO --`
+
+  ```
+   yarn
+
+   docker-compose up -d
+
+   npx prisma migrate dev
+   np prisma db seed
+  ```
 
 ### Rodando testes
 
