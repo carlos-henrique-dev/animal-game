@@ -10,4 +10,8 @@ export class GameSocketService {
   broadCastNewGame(params: Game) {
     this.socket.emit(GameEventEmitters.GAME_CREATED, params);
   }
+
+  broadCastGameUpdated(params: Game) {
+    this.socket.emit(GameEventEmitters.GAME_UPDATED, params);
+  }
 }
