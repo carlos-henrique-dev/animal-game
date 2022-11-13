@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -10,7 +7,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum role {
+enum Role {
     USER
     ADMIN
 }
@@ -20,7 +17,7 @@ model user {
     username  String   @unique
     name      String
     password  String
-    role      role
+    role      Role     @default(USER)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     bet       bet[]
@@ -42,30 +39,39 @@ model bet {
     animalId     Int
     game         game          @relation(fields: [gameId], references: [id])
     gameId       Int
+    amount       Int
     createdAt    DateTime      @default(now())
     updatedAt    DateTime      @updatedAt
     game_results game_results?
 }
 
+enum GameStatus {
+    ACTIVE
+    INACTIVE
+    FINISHED
+}
+
 model game {
-    id        Int      @id @default(autoincrement())
-    name      String   @unique
+    id        Int        @id @default(autoincrement())
+    name      String     @unique
     betLimit  Int
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    status    GameStatus @default(ACTIVE)
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
     bet       bet[]
 }
 
-enum status {
+enum GameResultStatus {
     WINNER
     LOOSER
 }
 
 model game_results {
-    id        Int      @id @default(autoincrement())
-    bet       bet      @relation(fields: [betId], references: [id])
-    betId     Int      @unique
-    status    status
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id        Int              @id @default(autoincrement())
+    bet       bet              @relation(fields: [betId], references: [id])
+    betId     Int              @unique
+    jackpot   Int
+    status    GameResultStatus
+    createdAt DateTime         @default(now())
+    updatedAt DateTime         @updatedAt
 }

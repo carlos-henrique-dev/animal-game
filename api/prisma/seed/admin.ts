@@ -1,4 +1,4 @@
-import { PrismaClient, role } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 interface Params {
@@ -13,7 +13,7 @@ export async function AdminSeed({ prismaClient }: Params) {
     name: 'Admin',
     username: 'admin',
     password: hash,
-    role: role.ADMIN,
+    role: Role.ADMIN,
   };
 
   return prismaClient.user.upsert({

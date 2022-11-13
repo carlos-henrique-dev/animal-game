@@ -12,10 +12,14 @@ import { game as GameModel } from '@prisma/client';
 import { FindGamesDTO } from './dto/find-games';
 import { CreateGameDTO } from './dto/create-game';
 import { FindGameDto } from './dto/find-game';
+import { GameSocketService } from 'src/events/game/game-socket.service';
 
 @Controller()
 export class GameController {
-  constructor(private readonly gameService: GameService) {}
+  constructor(
+    private readonly gameService: GameService,
+    private gameSocketService: GameSocketService,
+  ) {}
 
   @Post('game')
   async createGame(
@@ -28,7 +32,10 @@ export class GameController {
       throw new HttpException('Game already exists', HttpStatus.CONFLICT);
     }
 
-    return this.gameService.createGame(gameData);
+    const newGame = await this.gameService.createGame(gameData);
+    this.gameSocketService.broadCastNewGame(newGame);
+
+    return newGame;
   }
 
   @Get('game')
