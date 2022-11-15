@@ -1,0 +1,1 @@
+export const manifests = {"manifests":[{"name":"@bets","isPrivate":false},{"name":"@games","isPrivate":false}]}
