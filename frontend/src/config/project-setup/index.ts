@@ -1,7 +1,14 @@
-import { manifests } from '../manifests'
+import { ModuleManifest } from '@/interfaces'
 
 export const ProjectSetup = async () => {
-  console.log('Starting project setup...')
+  const modules = import.meta.glob('../../modules/*/manifest.tsx')
+  const manifests: ModuleManifest[] = []
 
-  return console.log(manifests.manifests)
+  for (const path in modules) {
+    const module: any = await modules[path]()
+
+    manifests.push(module.manifest ? module.manifest : module.default)
+  }
+
+  return manifests
 }

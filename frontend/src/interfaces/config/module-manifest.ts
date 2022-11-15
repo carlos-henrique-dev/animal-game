@@ -1,11 +1,11 @@
 // import { MenuSettings } from './menu'
 // import { Permissions } from './permissions'
-// import { RouteSettings } from './route'
+import { RouteSettings } from './routes'
 
 export interface ModuleManifest {
   name: `@${string}`
   isPrivate?: boolean
   //   permissions?: Permissions[]
-  //   route: RouteSettings
+  route?: RouteSettings
   //   menu: MenuSettings
 }
